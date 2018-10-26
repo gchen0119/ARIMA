@@ -40,7 +40,7 @@ Notice there are periodic oscillations due to the seasonal cycle.
 
 Decompose the data into trend, season, and residual (first guess of stationary process)
 ```python
-from statsmodels.tsa.seasonal import seasonal_decompose  # decompose time series into: trend, season, and residual
+from statsmodels.tsa.seasonal import seasonal_decompose  
 decomposition = seasonal_decompose(y, model='additive',freq=365) # 365 is the sampling freq (N/T) in a period T=year
 decomposition.plot()
 ```
