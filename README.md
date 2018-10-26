@@ -120,6 +120,7 @@ print(results.summary().tables[1])
     <img src="table.png"/>
 </p>
 
+
 ```ptyhon
 results.plot_diagnostics(figsize=(16, 12))
 ```
