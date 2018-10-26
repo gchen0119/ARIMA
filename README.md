@@ -116,11 +116,9 @@ results = best_model.fit()
 print(results.summary().tables[1])
 ```
 
- |             |   coef    | std err    |     z     | P>|z|     |  0.025    |  0.975 
- |------------ | --------- | ---------- | --------- | --------- | --------- | ---------
- | ar.L1       |   0.3223  |    0.052   |   6.201   |   0.000   |    0.220  |     0.424
- | ma.L1       |   0.2491  |    0.054   |   4.590   |   0.000   |    0.143  |     0.355
- | sigma2      |   5.3715  |    0.227   |  23.632   |   0.000   |    4.926  |     5.817
+<p align="center">
+    <img src="table.png"/>
+</p>
 
 results.plot_diagnostics(figsize=(16, 12))
 
