@@ -73,13 +73,18 @@ Set up the model hyperparameters
 import itertools
 p = d = q = range(0, 2)
 pdq = list(itertools.product(p, d, q)) # (p,d,q)
-seasonal_pdq = [(x[0], x[1], x[2], 365) for x in pdq] # (P,D,Q,s), sampling freq = 365 
+#seasonal_pdq = [(x[0], x[1], x[2], 365) for x in pdq] # (P,D,Q,s), sampling freq = 365 
+seasonal_pdq = [(0, 0, 0, 0)]
 ```
 
 [Akaike Information Criterion (AIC)](https://en.wikipedia.org/wiki/Akaike_information_criterion) 
 is used to select the best model from grid search: 
 ```python
 import warnings
+from statsmodels.tsa.arima_model import ARIMA # ARIMA model
+from statsmodels.tsa.stattools import adfuller # augmented Dickey-Fuller test
+from statsmodels.tsa.statespace.sarimax import SARIMAX # seasonal ARIMA
+
 warnings.filterwarnings("ignore")
 aic_min = float("inf") 
 param = (0,0,0,0,0,0) # (p,d,q,P,D,Q,s)
@@ -88,7 +93,7 @@ best_model = None # low AIC is better
 for x1 in pdq:
     for x2 in seasonal_pdq:
         try:
-            mod = SARIMAX(y, order = x1, seasonal_order = x2, enforce_stationarity = False, enforce_invertibility = False)
+            mod = SARIMAX(test, order = x1, seasonal_order = x2, enforce_stationarity = False, enforce_invertibility = False)
             results = mod.fit() # this stage is slow 
             print("(p,d,q,P,D,Q,s) = {}: AIC = {}".format(x1 + x2, results.aic))
             if results.aic < aic_min:
@@ -97,20 +102,20 @@ for x1 in pdq:
                 best_model = mod
         except:
             continue
+```
 
+Show the best model hyperparameter
+```python
 print("Best (p,d,q,P,D,Q,s) =", param)
-
+```
+> Best (p,d,q,P,D,Q,s) = (1, 0, 1, 0, 0, 0, 0)
 
 
 results = best_model.fit()
-results.summary().tables[1]
+print(results.summary().tables[1])
 results.plot_diagnostics(figsize=(16, 12))
 
 ```
-from pandas.plotting import autocorrelation_plot
-from statsmodels.tsa.arima_model import ARIMA # ARIMA model
-from statsmodels.tsa.stattools import adfuller # augmented Dickey-Fuller test
-from statsmodels.tsa.statespace.sarimax import SARIMAX # seasonal ARIMA
 
 #series["mint"] = series.mint.to_numeric(downcast='float')
 #series["mint"] = pd.to_numeric(series["mint"],errors='coerce',downcast='float')
